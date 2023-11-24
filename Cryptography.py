@@ -1,6 +1,36 @@
 from collections import Counter
 tr=('a', 'b', 'c', 'ç', 'd', 'e', 'f', 'g', 'ğ', 'h', 'i', 'i̇', 'j', 'k', 'l', 'm', 'n', 'o', 'ö', 'p', 'r', 's', 'ş', 't', 'u', 'ü', 'v', 'y', 'z')
 en = ("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z")
+def modInverse(A, M): 
+            m0 = M 
+            y = 0
+            x = 1
+        
+            if (M == 1): 
+                return 0
+
+            while (A > 1): 
+        
+                # q is quotient 
+                q = A // M 
+        
+                t = M 
+        
+                # m is remainder now, process 
+                # same as Euclid's algo 
+                M = A % M 
+                A = t 
+                t = y 
+        
+                # Update x and y 
+                y = x - q * y 
+                x = t 
+        
+            # Make x positive 
+            if (x < 0): 
+                x = x + m0 
+        
+            return x 
 class AdditiveChiper:
     """
     !!!! This README.md created wtih AI .So this file is not complete yet. !!!!
@@ -109,72 +139,102 @@ class AdditiveChiper:
                 return "Error : I cant find this charachter in alphabet"
         
         return plaintext
-# Example usage
-"""
-    TESTING
-"""
-plaintext_en="These are short famous texts in English from classic sources like the Bible or Shakespeare Some texts have word definitions and explanations to help you Some of these texts are written in an old style of English Try to understand them because the English that we speak today is based on what our great great great great grandparents spoke before Of course not all these texts were originally written in English The Bible for example is a translation But they are all well known in English today and many of them express beautiful thoughts".replace("\n","").lower()
-encrypt_plaintext_en=AdditiveChiper.AdditiveChiperEncryp(plaintext=plaintext_en,key=15,alphabet="en")
-  
-chipertext = encrypt_plaintext_en
-decrypt_plaintext_en=AdditiveChiper.AdditiveChiperDecryp(encrypt_plaintext_en,15,"en").replace("*",",")
-if decrypt_plaintext_en == plaintext_en.lower().replace(" ",","):
-    print("AdditiveChiper is working")
-    print("encrypt_plaintext_en : ",encrypt_plaintext_en)
-    print("decrypt_plaintext_en : ",decrypt_plaintext_en)
-else:
-    print("AdditiveChiper is not working")
-    print("plaintext :",plaintext_en.lower().replace(" ",""))
-    print("encrypt_plaintext_en : ",encrypt_plaintext_en)
-    print("decrypt_plaintext_en : ",decrypt_plaintext_en)
+class MultiplicativeChiper:
+        def MultiplicativeChiperEncryp(plaintext,key,alphabet):
+            # If your python verison is 3.10 ,you can use this code .
+                # match alphabet:
+                #     case ["tr"]:
+                #         alphabet=tr
+                #     case ["en"]:
+                #         alphabet=en
+                #     case _:
+                #         print("Alphabet not found")
+                #         return
+            if alphabet == "en" :
+                alphabet =en
+            elif alphabet =="tr":
+                    alphabet =tr
+            else:
+                print("Alphabet not supportted!")
+                return 
+            chipertext=""
+            for charachter in plaintext.lower():
+                if charachter in alphabet:
+                    chipertext+=alphabet[(alphabet.index(charachter)*key)%len(alphabet)]
+                else:
+                    chipertext+="*"
+            return chipertext
 
+        def MultiplicativeChiperDecryp(plaintext,key,alphabet):
+            """
+            Decrypts the given ciphertext using the Additive Cipher algorithm.
 
-def MultiplicativeChiper(plaintext,key,alphabet):
-# If your python verison is 3.10 ,you can use this code .
-    # match alphabet:
-    #     case ["tr"]:
-    #         alphabet=tr
-    #     case ["en"]:
-    #         alphabet=en
-    #     case _:
-    #         print("Alphabet not found")
-    #         return
-    if alphabet == "en" :
-        alphabet =en
-    elif alphabet =="tr":
-        alphabet =tr
-    else:
-        print("Alphabet not supportted!")
-        return 
-    chipertext=""
-    for charachter in plaintext.lower():
-        if charachter in alphabet:
-            chipertext+=alphabet[(alphabet.index(charachter)*key)%len(alphabet)]
+            Args:
+                plaintext (str): The ciphertext to be decrypted.
+                key (int): The decryption key.
+                alphabet (str): The alphabet used for decryption.
+
+            Returns:
+                str: The decrypted plaintext.
+            """
+            # If your python verison is 3.10 ,you can use this code .
+            # match alphabet:
+            #     case ["tr"]:
+            #         alphabet=tr
+            #     case ["en"]:
+            #         alphabet=en
+            #     case _:
+            #         print("Alphabet not found")
+            #         return
+            if alphabet == "en":
+                alphabet = en
+            elif alphabet == "tr":
+                alphabet = tr
+            else:
+                print("Alphabet not supported!")
+                return
+
+            key = modInverse(key, len(alphabet))
+            if key == -1:
+                print("Key not found")
+                return
+
+            chipertext = ""
+            for charachter in plaintext.lower():
+                if charachter in alphabet:
+                    chipertext += alphabet[(alphabet.index(charachter) * key) % len(alphabet)]
+                else:
+                    chipertext += "*"
+            return chipertext
+class AffineChiper:
+    def AffineChiperEncryp(plaintext,key,alphabet):
+        if alphabet == "en" :
+            alphabet =en
+        elif alphabet =="tr":
+            alphabet =tr
         else:
-            chipertext+="*"
-    return chipertext
-
-def AffineChiper(plaintext,key,alphabet):
-    if alphabet == "en" :
-        alphabet =en
-    elif alphabet =="tr":
-        alphabet =tr
-    else:
-        print("Alphabet not supportted!")
-        return
-    chipertext=""
-    for charachter in plaintext.lower():
-        if charachter in alphabet:
-            chipertext+=alphabet[((alphabet.index(charachter)*key[0])+key[1])%len(alphabet)]
+            print("Alphabet not supportted!")
+            return
+        chipertext=""
+        for charachter in plaintext.lower():
+            if charachter in alphabet:
+                chipertext+=alphabet[((alphabet.index(charachter)*key[0])+key[1])%len(alphabet)]
+            else:
+                chipertext+="*"
+        return chipertext
+    def AffineChiperDecryp(chipertext,key,alphabet):
+        if alphabet == "en" :
+            alphabet =en
+        elif alphabet =="tr":
+            alphabet =tr
         else:
-            chipertext+="*"
-    return chipertext
-
-# chipertext_1=AdditiveChiper.AdditiveChiperEncryp(plaintext="hello",key=15,alphabet="tr")
-# print(chipertext_1)
-
-# chipertext_2=MultiplicativeChiper("HelLo",7,"en")
-# print(chipertext_2)
-
-# chipertext_3=AffineChiper("HelLo",(7,2),"en")
-# print(chipertext_3)
+            print("Alphabet not supportted!")
+            return
+        key =modInverse(key[0],len(alphabet)),key[1]
+        plaintext=""
+        for charachter in chipertext.lower():
+            if charachter in alphabet:
+                plaintext+=alphabet[((alphabet.index(charachter)-key[1])*key[0])%len(alphabet)]
+            else:
+                plaintext+="*"
+        return plaintext
