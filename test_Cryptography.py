@@ -1,5 +1,5 @@
 # Description: This file contains the test cases for the Cryptography module.
-from Cryptography import AdditiveChiper , MultiplicativeChiper,AffineChiper
+from Cryptography import AdditiveChiper, AutoKeyChiper , MultiplicativeChiper,AffineChiper
 def test_AdditiveCipher():
     plaintext = "hello"
     key = 3
@@ -83,10 +83,18 @@ def test_AffineChiper():
     assert AffineChiper.AffineChiperEncryp(plaintext, key, alphabet) == expected_output
     assert AffineChiper.AffineChiperDecryp(expected_output, key, alphabet) == plaintext
     print("Test case 3 :Affine Chiper  passed!")
-    
-
+def test_AutoKeyChiper():
+    plaintext = "Attack is today"
+    plaintext=plaintext.replace(" ","*").lower()
+    key=12
+    alphabet="en"
+    excepted_output="mtmtcm*sa*lhrdy"
+    assert AutoKeyChiper.AutoKeyChiperEncryp(plaintext,key,alphabet)==excepted_output
+    assert AutoKeyChiper.AutoKeyChiperDecryp(excepted_output,key,alphabet)==plaintext   
+    print("Test case 4 :AutoKeyChiper  passed!") 
 test_AdditiveCipher()
 test_MultiplicativeChiperEncryp()
 test_MultiplicativeChiperDecryp()
 test_AffineChiper()
+test_AutoKeyChiper()
 print("All tests passed!")

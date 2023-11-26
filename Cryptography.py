@@ -140,31 +140,39 @@ class AdditiveChiper:
         
         return plaintext
 class MultiplicativeChiper:
-        def MultiplicativeChiperEncryp(plaintext,key,alphabet):
-            # If your python verison is 3.10 ,you can use this code .
-                # match alphabet:
-                #     case ["tr"]:
-                #         alphabet=tr
-                #     case ["en"]:
-                #         alphabet=en
-                #     case _:
-                #         print("Alphabet not found")
-                #         return
-            if alphabet == "en" :
-                alphabet =en
-            elif alphabet =="tr":
-                    alphabet =tr
+        def MultiplicativeChiperEncryp(plaintext, key, alphabet):
+            """
+            Encrypts the given plaintext using the Multiplicative Cipher algorithm.
+
+            Args:
+                plaintext (str): The plaintext to be encrypted.
+                key (int): The encryption key.
+                alphabet (str): The alphabet used for encryption.
+
+            Returns:
+                str: The encrypted ciphertext.
+
+            Raises:
+                None
+
+            """
+            if alphabet == "en":
+                alphabet = en
+            elif alphabet == "tr":
+                alphabet = tr
             else:
-                print("Alphabet not supportted!")
-                return 
-            chipertext=""
+                print("Alphabet not supported!")
+                return
+
+            chipertext = ""
             for charachter in plaintext.lower():
                 if charachter in alphabet:
-                    chipertext+=alphabet[(alphabet.index(charachter)*key)%len(alphabet)]
+                    chipertext += alphabet[(alphabet.index(charachter) * key) % len(alphabet)]
                 else:
-                    chipertext+="*"
-            return chipertext
+                    chipertext += "*"
 
+            return chipertext
+        
         def MultiplicativeChiperDecryp(plaintext,key,alphabet):
             """
             Decrypts the given ciphertext using the Additive Cipher algorithm.
@@ -207,82 +215,128 @@ class MultiplicativeChiper:
                     chipertext += "*"
             return chipertext
 class AffineChiper:
-    def AffineChiperEncryp(plaintext,key,alphabet):
-        if alphabet == "en" :
-            alphabet =en
-        elif alphabet =="tr":
-            alphabet =tr
-        else:
-            print("Alphabet not supportted!")
-            return
-        chipertext=""
-        for charachter in plaintext.lower():
-            if charachter in alphabet:
-                chipertext+=alphabet[((alphabet.index(charachter)*key[0])+key[1])%len(alphabet)]
-            else:
-                chipertext+="*"
-        return chipertext
-    def AffineChiperDecryp(chipertext,key,alphabet):
-        if alphabet == "en" :
-            alphabet =en
-        elif alphabet =="tr":
-            alphabet =tr
-        else:
-            print("Alphabet not supportted!")
-            return
-        key =modInverse(key[0],len(alphabet)),key[1]
-        plaintext=""
-        for charachter in chipertext.lower():
-            if charachter in alphabet:
-                plaintext+=alphabet[((alphabet.index(charachter)-key[1])*key[0])%len(alphabet)]
-            else:
-                plaintext+="*"
-        return plaintext
+    """
+    This class implements the Affine Cipher encryption and decryption methods.
+    """
 
-class AutoKeyChiper:
-    def AutoKeyChiperEncryp(plaintext,key,alphabet):
-        if alphabet == "en" :
-            alphabet =en
-        elif alphabet =="tr":
-            alphabet =tr
+    def AffineChiperEncryp(plaintext, key, alphabet):
+        """
+        Encrypts the given plaintext using the Affine Cipher.
+
+        Args:
+            plaintext (str): The plaintext to be encrypted.
+            key (tuple): The encryption key consisting of two integers (a, b).
+            alphabet (str): The alphabet to be used for encryption.
+
+        Returns:
+            str: The encrypted ciphertext.
+        """
+        if alphabet == "en":
+            alphabet = en
+        elif alphabet == "tr":
+            alphabet = tr
         else:
-            print("Alphabet not supportted!")
+            print("Alphabet not supported!")
             return
-        chipertext=""
+
+        chipertext = ""
         for charachter in plaintext.lower():
             if charachter in alphabet:
-                chipertext+=alphabet[ ( ( alphabet.index(charachter)+key )%len(alphabet) ) ]
-                key=alphabet.index(charachter)
+                chipertext += alphabet[((alphabet.index(charachter) * key[0]) + key[1]) % len(alphabet)]
             else:
-                chipertext+="*"
+                chipertext += "*"
         return chipertext
-    def AutoKeyChiperDecryp(chipertext,key,alphabet):
-        if alphabet == "en" :
-            alphabet =en
-        elif alphabet =="tr":
-            alphabet =tr
+
+    def AffineChiperDecryp(chipertext, key, alphabet):
+        """
+        Decrypts the given ciphertext using the Affine Cipher.
+
+        Args:
+            chipertext (str): The ciphertext to be decrypted.
+            key (tuple): The decryption key consisting of two integers (a, b).
+            alphabet (str): The alphabet to be used for decryption.
+
+        Returns:
+            str: The decrypted plaintext.
+        """
+        if alphabet == "en":
+            alphabet = en
+        elif alphabet == "tr":
+            alphabet = tr
         else:
-            print("Alphabet not supportted!")
+            print("Alphabet not supported!")
             return
-        plaintext=""
+
+        key = modInverse(key[0], len(alphabet)), key[1]
+        plaintext = ""
         for charachter in chipertext.lower():
             if charachter in alphabet:
-                plainchar=alphabet[ ( ( alphabet.index(charachter)-key )%len(alphabet) ) ]
-                plaintext+=plainchar
-                key=alphabet.index(plainchar)
-            elif charachter=="*":
-                plaintext+="*"
+                plaintext += alphabet[((alphabet.index(charachter) - key[1]) * key[0]) % len(alphabet)]
             else:
-                chipertext+="*"
+                plaintext += "*"
         return plaintext
-plaintext = "Attack is today"
-palintext=plaintext.replace(" ","*").lower()
-print(palintext)
-key=12
-alphabet="en"
-chipertext=AutoKeyChiper.AutoKeyChiperEncryp(plaintext,key,alphabet)
-print(chipertext)
-decrypt_chiper=AutoKeyChiper.AutoKeyChiperDecryp(chipertext,key,alphabet)
-print(decrypt_chiper)
-if decrypt_chiper==plaintext.replace(" ","*").lower():
-    print("Test case 1 :AutoKeyChiper passed!")
+class AutoKeyChiper:
+    """
+    AutoKeyChiper class for encrypting and decrypting text using the Autokey cipher.
+    """
+
+    def AutoKeyChiperEncryp(plaintext, key, alphabet):
+        """
+        Encrypts the plaintext using the Autokey cipher.
+
+        Args:
+            plaintext (str): The text to be encrypted.
+            key (int): The encryption key.
+            alphabet (str): The alphabet used for encryption.
+
+        Returns:
+            str: The encrypted ciphertext.
+        """
+        if alphabet == "en":
+            alphabet = en
+        elif alphabet == "tr":
+            alphabet = tr
+        else:
+            print("Alphabet not supported!")
+            return
+
+        chipertext = ""
+        for charachter in plaintext.lower():
+            if charachter in alphabet:
+                chipertext += alphabet[((alphabet.index(charachter) + key) % len(alphabet))]
+                key = alphabet.index(charachter)
+            else:
+                chipertext += "*"
+        return chipertext
+
+    def AutoKeyChiperDecryp(chipertext, key, alphabet):
+        """
+        Decrypts the chipertext using the Autokey cipher.
+
+        Args:
+            chipertext (str): The ciphertext to be decrypted.
+            key (int): The decryption key.
+            alphabet (str): The alphabet used for decryption.
+
+        Returns:
+            str: The decrypted plaintext.
+        """
+        if alphabet == "en":
+            alphabet = en
+        elif alphabet == "tr":
+            alphabet = tr
+        else:
+            print("Alphabet not supported!")
+            return
+
+        plaintext = ""
+        for charachter in chipertext.lower():
+            if charachter in alphabet:
+                plainchar = alphabet[((alphabet.index(charachter) - key) % len(alphabet))]
+                plaintext += plainchar
+                key = alphabet.index(plainchar)
+            elif charachter == "*":
+                plaintext += "*"
+            else:
+                chipertext += "*"
+        return plaintext
