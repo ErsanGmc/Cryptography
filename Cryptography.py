@@ -238,3 +238,51 @@ class AffineChiper:
             else:
                 plaintext+="*"
         return plaintext
+
+class AutoKeyChiper:
+    def AutoKeyChiperEncryp(plaintext,key,alphabet):
+        if alphabet == "en" :
+            alphabet =en
+        elif alphabet =="tr":
+            alphabet =tr
+        else:
+            print("Alphabet not supportted!")
+            return
+        chipertext=""
+        for charachter in plaintext.lower():
+            if charachter in alphabet:
+                chipertext+=alphabet[ ( ( alphabet.index(charachter)+key )%len(alphabet) ) ]
+                key=alphabet.index(charachter)
+            else:
+                chipertext+="*"
+        return chipertext
+    def AutoKeyChiperDecryp(chipertext,key,alphabet):
+        if alphabet == "en" :
+            alphabet =en
+        elif alphabet =="tr":
+            alphabet =tr
+        else:
+            print("Alphabet not supportted!")
+            return
+        plaintext=""
+        for charachter in chipertext.lower():
+            if charachter in alphabet:
+                plainchar=alphabet[ ( ( alphabet.index(charachter)-key )%len(alphabet) ) ]
+                plaintext+=plainchar
+                key=alphabet.index(plainchar)
+            elif charachter=="*":
+                plaintext+="*"
+            else:
+                chipertext+="*"
+        return plaintext
+plaintext = "Attack is today"
+palintext=plaintext.replace(" ","*").lower()
+print(palintext)
+key=12
+alphabet="en"
+chipertext=AutoKeyChiper.AutoKeyChiperEncryp(plaintext,key,alphabet)
+print(chipertext)
+decrypt_chiper=AutoKeyChiper.AutoKeyChiperDecryp(chipertext,key,alphabet)
+print(decrypt_chiper)
+if decrypt_chiper==plaintext.replace(" ","*").lower():
+    print("Test case 1 :AutoKeyChiper passed!")
